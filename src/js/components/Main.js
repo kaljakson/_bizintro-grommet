@@ -23,6 +23,7 @@ import Help from '../screens/Help';
 import Pricing from '../screens/Pricing';
 import Appointment from '../screens/Appointment';
 import Feature from '../screens/Feature';
+import Feature1 from '../screens/Feature1';
 import Contacts from '../screens/Contacts';
 import ContactsList from '../screens/ContactsList'
 
@@ -60,6 +61,7 @@ class Main extends Component {
           <Switch>
             <Route exact={true} path='/' component={Landing} />
             <Route path='/feature' component={Feature} />
+            <Route path='/guest-feature' component={Feature1} />
             <Route path='/pricing' component={Pricing} />
             <Route path='/dashboard' component={Dashboard} />
             <Route path='/home' component={Home} />

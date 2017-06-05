@@ -46,10 +46,24 @@ import SidebarContent from './contacts-sidebar';
 class Guest extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isShowingModal: false,
+    }
+    this.handleClose = this.handleClose.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this._onResponsive = this._onResponsive.bind(this);
   }
-
   
+  handleClose(ev) {
+    ev.preventDefault();
+    console.log('---------');
+    this.setState({isShowingModal: false});
+  }
+  handleClick(ev) {
+    ev.preventDefault();
+    console.log('---------', this.state);
+    this.setState({isShowingModal: true});
+  }
 
   componentDidMount() {
     // console.log(this);
@@ -91,7 +105,16 @@ class Guest extends Component {
         </Box>
         <Box direction='row' className="guest-footer">
           <Box className='guest-footer-left-col'>
-            <UserIcon colorIndex="light-1" /> Sing up today to g et more out of Bizintro
+            <UserIcon href='/feature' onClick={this.handleClick} colorIndex="light-1" /> Sing up today to g et more out of Bizintro
+            {
+              this.state.isShowingModal &&
+              <ModalContainer onClose={this.handleClose}>
+                <ModalDialog onClose={this.handleClose}>
+                  <h1>Dialog Content</h1>
+                  <p>More Content. Anything goes here</p>
+                </ModalDialog>
+              </ModalContainer>
+            }
           </Box>
           <Box className='guest-footer-right-col'>
             <Anchor href='#'>Create Account</Anchor>

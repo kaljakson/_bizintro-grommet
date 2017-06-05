@@ -15,9 +15,12 @@ import Paragraph from 'grommet/components/Paragraph';
 import Split from 'grommet/components/Split';
 import Value from 'grommet/components/Value';
 import Meter from 'grommet/components/Meter';
+import Title from 'grommet/components/Title';
+
 import Spinning from 'grommet/components/icons/Spinning';
 import { getMessage } from 'grommet/utils/Intl';
 
+import SegmentedControl from 'react-segmented-control';
 import NavControl from '../components/NavControl';
 import {
   loadDashboard, unloadDashboard
@@ -26,45 +29,14 @@ import {
 import { pageLoaded } from './utils';
 import NavSidebar from '../components/NavSidebar';
 
-import { Axis } from 'grommet/components/chart/Chart';
+import Chart, 
+  { Base, Layers, Marker, MarkerLabel, Line, HotSpots, Axis } 
+  from 'grommet/components/chart/Chart';
+
 import LineChart from './LineChart';
-
-
-const LESS_MONEY_TO_SPEND = {
-  axis: {
-    large: {
-      series: [
-        {"index": 0, "label": "2000"},
-        {"index": 2, "label": "2002"},
-        {"index": 4, "label": "2004"},
-        {"index": 6, "label": "2006"},
-        {"index": 8, "label": "2008"},
-        {"index": 10, "label": "2010"},
-        {"index": 12, "label": "2012"}
-      ],
-      count: 13
-    },
-    small: {
-      series: [
-        {"index": 0, "label": "2000"},
-        {"index": 3, "label": "2006"},
-        {"index": 5, "label": "2012"}
-      ],
-      count: 6
-    }
-  },
-  max: 69,
-  min: 62,
-  title: "Less Money to Spend",
-  series: [
-    {
-      values: [69, 69, 68, 67, 66, 65, 66, 66, 
-        66, 64, 64, 63, 64],
-      units: "%",
-      colorIndex: "accent-1"
-    }
-  ]
-};
+import Table from 'grommet/components/Table';
+import TableRow from 'grommet/components/TableRow';
+import DateSlide from './DateSlide';
 
 class Dashboard extends Component {
 
@@ -90,7 +62,20 @@ class Dashboard extends Component {
     super(props);
     console.log('props');
     console.log(props);
+    this.state = {
+      date: '',
+      chart_type: ''
+    }
     this._onResponsive = this._onResponsive.bind(this);
+    this.dateUpdated = this.dateUpdated.bind(this);
+    this.chartTypeUpdate = this.chartTypeUpdate.bind(this);
+  }
+
+  dateUpdated(value) {
+    console.log('----segment control clicked', value);
+  }
+  chartTypeUpdate(value) {
+    console.log('----chart type updated----', value);
   }
 
   _onResponsive (isLayoutSmall) {
@@ -102,14 +87,16 @@ class Dashboard extends Component {
 
   render() {
     const nav = <NavSidebar />;
-    const axisSmall = LESS_MONEY_TO_SPEND.axis.small;
-    const axisLarge = LESS_MONEY_TO_SPEND.axis.large;
-    const { series, title, max, min } = LESS_MONEY_TO_SPEND;
-    const axis = (this.props.layout === 'small')
-      ? <Axis vertical={true} ticks={true} count={axisSmall.count}
-        labels={axisSmall.series} />
-      : <Axis vertical={false} ticks={true} count={axisLarge.count}
-        labels={axisLarge.series} />;
+    const config = {
+      title: null, 
+      xAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      series: [{
+        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 454.4]
+      }]
+    }
+    
     return (
       <Box>
         <Header className="introduction-header">
@@ -118,16 +105,245 @@ class Dashboard extends Component {
         <Box direction='row'>
           {nav}
           <div className='main-content'>
-            <Box>
-              <LineChart 
-                axis={axis} 
-                layout={this.props.layout}
-                min={min}
-                max={max}
-                title={title}
-                series={series}
-              />
+            <Box className='dashboard-chart-part'>
+              <Box direction='row' className='dashboard-chart-header'>
+                <Box direction='row' className='left-col'>
+                  <SegmentedControl 
+                    onChange={this.chartTypeUpdate} 
+                    value={this.state.chart_type}
+                    name="chart_type">
+                    <span value="instruction">
+                      Instructions<br />
+                      <strong>150</strong>
+                    </span>
+                    <span value="appointment">
+                      Appointments<br />
+                      <strong>150</strong>
+                    </span>
+                    <span value="help">
+                      Helps<br />
+                      <strong>150</strong>
+                    </span>
+                    <span value="contact">
+                      Contacts<br />
+                      <strong>150</strong>
+                    </span>
+                  </SegmentedControl>
+                </Box>
+                <Box className='right-col'>
+                  <SegmentedControl 
+                    onChange={this.dateUpdated} 
+                    value={this.state.date}
+                    name="date">
+                    <span value="day">Day</span>
+                    <span value="week">Week</span>
+                    <span value="month">Month</span>
+                    <span value="year">Year</span>
+                  </SegmentedControl>
+                </Box>
+              </Box>
+              <LineChart config={config} />
             </Box>
+            <Box className='dashboard-section' direction={this.state.layout == 'small' ? 'column' : 'row'}>
+              <Box className='dashboard-section-left-col'>
+                <Header>
+                  <Title>Rising Contacts</Title><Anchor href='#'>View all contacts</Anchor>
+                </Header>
+                <Box direction='row'>
+                  <Box className='dashboard-contact-item'>
+                    <Box direction='row' className='dashboard-contact-item-header'>
+                      <Title className='dashboard-contact-item-title'>
+                        Trey Anastasio<br />
+                        <span className='sub-title'>CEO Phishn Inc.</span>
+                      </Title>
+                      <span className='contact-budget'>1</span>
+                    </Box>
+                    <Box className='dashboard-contact-item-profile'>
+                      <Value value='Profile Completion'
+                        units=' '
+                        align='start' className='dashboard-contact-item-profile-text' />
+                      <Meter value={40} className='dashboard-contact-item-profile-graph'/>
+                    </Box>
+                    <Box className='dashboard-contact-item-third-row'>
+                      <Box className='dashboard-contact-item-text'>
+                        Instructions
+                      </Box>
+                      <Box direction='row' className='dashboard-contact-item-approves'>
+                        <Box className='col'>
+                          <strong>Requests</strong>
+                          <Box>85</Box>
+                        </Box>
+                        <Box className='col'>
+                          <strong>Accepts</strong>
+                          <Box>32</Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box className='dashboard-contact-item-forth-row'>
+                      <Box className='text-help'>Helps History</Box>
+                      <Box>
+                        <Chart>
+                          <Base />
+                          <Layers>
+                            <Line values={[70, 0, 20, 100, 60]} />
+                          </Layers>
+                        </Chart>
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Box className='dashboard-contact-item'>
+                    <Box direction='row' className='dashboard-contact-item-header'>
+                      <Title className='dashboard-contact-item-title'>
+                        Trey Anastasio<br />
+                        <span className='sub-title'>CEO Phishn Inc.</span>
+                      </Title>
+                      <span className='contact-budget'>1</span>
+                    </Box>
+                    <Box className='dashboard-contact-item-profile'>
+                      <Value value='Profile Completion'
+                        units=' '
+                        align='start' className='dashboard-contact-item-profile-text' />
+                      <Meter value={40} className='dashboard-contact-item-profile-graph'/>
+                    </Box>
+                    <Box className='dashboard-contact-item-third-row'>
+                      <Box className='dashboard-contact-item-text'>
+                        Instructions
+                      </Box>
+                      <Box direction='row' className='dashboard-contact-item-approves'>
+                        <Box className='col'>
+                          <strong>Requests</strong>
+                          <Box>85</Box>
+                        </Box>
+                        <Box className='col'>
+                          <strong>Accepts</strong>
+                          <Box>32</Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box className='dashboard-contact-item-forth-row'>
+                      <Box className='text-help'>Helps History</Box>
+                      <Box>
+                        <Chart>
+                          <Base />
+                          <Layers>
+                            <Line values={[70, 0, 20, 100, 60]} />
+                          </Layers>
+                        </Chart>
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Box className='dashboard-contact-item'>
+                    <Box direction='row' className='dashboard-contact-item-header'>
+                      <Title className='dashboard-contact-item-title'>
+                        Trey Anastasio<br />
+                        <span className='sub-title'>CEO Phishn Inc.</span>
+                      </Title>
+                      <span className='contact-budget'>1</span>
+                    </Box>
+                    <Box className='dashboard-contact-item-profile'>
+                      <Value value='Profile Completion'
+                        units=' '
+                        align='start' className='dashboard-contact-item-profile-text' />
+                      <Meter value={40} className='dashboard-contact-item-profile-graph'/>
+                    </Box>
+                    <Box className='dashboard-contact-item-third-row'>
+                      <Box className='dashboard-contact-item-text'>
+                        Instructions
+                      </Box>
+                      <Box direction='row' className='dashboard-contact-item-approves'>
+                        <Box className='col'>
+                          <strong>Requests</strong>
+                          <Box>85</Box>
+                        </Box>
+                        <Box className='col'>
+                          <strong>Accepts</strong>
+                          <Box>32</Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box className='dashboard-contact-item-forth-row'>
+                      <Box className='text-help'>Helps History</Box>
+                      <Box>
+                        <Chart>
+                          <Base />
+                          <Layers>
+                            <Line values={[70, 0, 20, 100, 60]} />
+                          </Layers>
+                        </Chart>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+              <Box className='dashboard-section-right-col'>
+                <Header>
+                  <Title>Recent Introductions</Title>
+                </Header>
+                <Box>
+                  <Table className='dashboard-recent-instructions'>
+                    <thead>
+                      <tr>
+                        <th>
+                          Contact Name
+                        </th>
+                        <th>
+                          Sent
+                        </th>
+                        <th>
+                          Accepted
+                        </th>
+                        <th>
+                          Scheduled
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <TableRow>
+                        <td>
+                          Jennifer McCarthy
+                        </td>
+                        <td colSpan={3}>
+                          <DateSlide />
+                        </td>
+                      </TableRow>
+                      <TableRow>
+                        <td>
+                          Jennifer McCarthy
+                        </td>
+                        <td colSpan={3}>
+                          <DateSlide />
+                        </td>
+                      </TableRow>
+                      <TableRow>
+                        <td>
+                          Jennifer McCarthy
+                        </td>
+                        <td colSpan={3}>
+                          <DateSlide />
+                        </td>
+                      </TableRow>
+                      <TableRow>
+                        <td>
+                          Jennifer McCarthy
+                        </td>
+                        <td colSpan={3}>
+                          <DateSlide />
+                        </td>
+                      </TableRow>
+                      <TableRow>
+                        <td>
+                          Jennifer McCarthy
+                        </td>
+                        <td colSpan={3}>
+                          <DateSlide />
+                        </td>
+                      </TableRow>
+                    </tbody>
+                  </Table>
+                </Box>
+              </Box>
+            </Box>
+            
           </div>
         </Box>
       </Box>

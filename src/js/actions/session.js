@@ -17,7 +17,7 @@ export function initialize() {
     } else {
       if (window.location.pathname == '/') {
 
-      } else if (!window.location.pathname.include('guest')) {
+      } else if (!window.location.pathname.includes('guest')) {
         window.location = '/login';
       }
     }

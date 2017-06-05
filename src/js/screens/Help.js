@@ -77,7 +77,7 @@ export default class Help extends Component {
   }
 
   menuButtonClick(ev) {
-    // ev.preventDefault();
+    
     this.onSetOpen(!this.state.open);
   }
 

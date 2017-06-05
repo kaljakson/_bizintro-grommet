@@ -48,7 +48,7 @@ import Form from 'grommet/components/Form';
 import FormField from 'grommet/components/FormField';
 import SearchInput from 'grommet/components/SearchInput';
 import GuestSidebarContent from './guest-sidebar-content'
-// import SidebarContent from './sidebar-content';
+import GuestCreacteSidebarContent from './guest-createsidebar-content'
 
 class GuestSearch extends Component {
   constructor(props) {
@@ -62,11 +62,16 @@ class GuestSearch extends Component {
       pullRight: true,
       touchHandleWidth: 20,
       dragToggleDistance: 30,
+      searched: false,
+      searched1: false
     };
 
     this._onResponsive = this._onResponsive.bind(this);
     this.menuButtonClick = this.menuButtonClick.bind(this);
+    this.createAccountButtonClick = this.createAccountButtonClick.bind(this);
     this.onSetOpen = this.onSetOpen.bind(this);
+    this.sidebar = <GuestSidebarContent />;
+    this.onSearchKeyChange = this.onSearchKeyChange.bind(this);
   }
 
   renderPropCheckbox(prop) {
@@ -95,7 +100,16 @@ class GuestSearch extends Component {
          {prop} <input type="number" onChange={setMethod} value={this.state[prop]} />
       </p>);
   }
-
+  onSearchKeyChange(event) {
+    console.log('---------', event.target.value);
+    if (event.target.value != '') {
+      this.setState({searched: true});
+      this.setState({searched1: true});
+    } else {
+      this.setState({searched: false});
+      this.setState({searched1: false});
+    }
+  }
   onSetOpen(open) {
     this.setState({open: open});
   }
@@ -103,7 +117,16 @@ class GuestSearch extends Component {
   menuButtonClick(ev) {
     ev.preventDefault();
     console.log('---------');
+    this.sidebar = <GuestSidebarContent />;
     this.onSetOpen(!this.state.open);
+    this.setState({searched1: false});
+  }
+  createAccountButtonClick() {  
+    
+    this.sidebar = <GuestCreacteSidebarContent />;
+    this.setState({docked: false});
+    this.setState({open: true});
+    this.setState({searched1: false});
   }
 
   componentDidMount() {
@@ -125,10 +148,8 @@ class GuestSearch extends Component {
 
   render() {
 
-    const sidebar = <GuestSidebarContent />;
-
     const sidebarProps = {
-      sidebar: sidebar,
+      sidebar: this.sidebar,
       docked: this.state.docked,
       sidebarClassName: 'custom-sidebar-class',
       open: this.state.open,
@@ -142,7 +163,7 @@ class GuestSearch extends Component {
     };
     return (
       <Sidebar {...sidebarProps} size='large'>
-        <Box>
+        <Box className='guest-search'>
           <Box className='guest-search-header'>
             <Box className='guest-search-header-title'>
               Bizintro
@@ -152,12 +173,119 @@ class GuestSearch extends Component {
           <Box className='guest-search-text'>
             <Form>
               <FormField label='Who are you looking for?' className='guest-search-form'>
-                <SearchInput placeHolder='Search by Position, Title, Company...' className='guest-search-icon' />
+                <SearchInput placeHolder='Search by Position, Title, Company...' className='guest-search-icon' onDOMChange={this.onSearchKeyChange} />
               </FormField>
             </Form>
           </Box>
           <Box className='guest-search-results'>
+            {
+              this.state.searched &&
+              <div className='guest-search-result-content' >
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+                <Box direction='row' className="guest-search-item">
+                  <Box className='guest-search-item-left-col'>
+                    <Box className='guest-search-item-right-col-name'>Bethany S.</Box>
+                    <Box>Visual Designer at ABC Corp</Box>
+                  </Box>
+                  <Box className='guest-search-item-right-col'>
+                    <Anchor href='#' className='guest-item-add-button' >Add </Anchor>
+                  </Box>
+                </Box>
+              </div>
+            }
+            
           </Box>
+           {
+            this.state.searched1 &&
+            <Box direction='row' className="guest-footer">
+              <Box className='guest-footer-left-col'>
+                <UserIcon colorIndex="light-1" /> Sing up today to g et more out of Bizintro
+              </Box>
+              <Box className='guest-footer-right-col'>
+                <Anchor href='#' onClick={this.createAccountButtonClick} >Create Account</Anchor>
+              </Box>
+            </Box>
+          }
         </Box>
       </Sidebar>
     );
