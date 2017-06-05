@@ -1,3 +1,4 @@
+//
 import 'whatwg-fetch';
 import { polyfill as promisePolyfill } from 'es6-promise';
 
